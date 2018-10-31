@@ -10,7 +10,12 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
+//首页
+Route::any('/', 'StaticPagesController@home')->name('home');
+//帮助页
+//为路由定义名称
+Route::any('/help', 'StaticPagesController@help')->name('help');
+//关于页
+Route::any('/about', 'StaticPagesController@about')->name('about');
+//注册页
+Route::any('/signup', 'UsersController@create')->name('signup');
