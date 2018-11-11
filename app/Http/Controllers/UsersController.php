@@ -38,7 +38,7 @@ class UsersController extends Controller
         ]);
         //使用session方法，来访问laravel封装好的会话实例。
         //当我们想存入一条缓存数据，让它只在下一次的请求内有效时，可以使用flash()方法。第一个参数是会话的键，第二个值是会话的值
-        session()->flash("success", "Hello，" . $user->name . '，欢迎来到你的世界。');
+        session()->flash("success", "Hello，" . $user->name . "，欢迎来到你的世界。");
         return redirect()->route('users.show', [$user]);
     }
 }

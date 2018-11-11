@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,4 +24,10 @@ Route::any('/signup', 'UsersController@create')->name('signup');
 //使用resource定义user路由
 Route::resource('/users', 'UsersController');
 
-
+//会话路由
+    //用户登录页面
+Route::get('/login', 'SessionController@create')->name('login');
+    //用户信息校验
+Route::post('/login', 'SessionController@store')->name('login');
+    //用户登出(销毁用户会话)
+Route::delete('/logout', 'SessionController@destroy')->name('logout');
