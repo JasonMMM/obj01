@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,3 +21,8 @@ Route::any('/help', 'StaticPagesController@help')->name('help');
 Route::any('/about', 'StaticPagesController@about')->name('about');
 //注册页
 Route::any('/signup', 'UsersController@create')->name('signup');
+
+//使用resource定义user路由
+Route::resource('users', 'UsersController');
+
+
