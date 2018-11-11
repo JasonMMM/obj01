@@ -8511,3 +8511,12 @@ input {
   margin-top: 50px;
 }
 
+.alert-danger ul {
+  float: none;
+  list-style: circle;
+}
+
+.alert-danger ul li {
+  float: none;
+}
+

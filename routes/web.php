@@ -23,6 +23,6 @@ Route::any('/about', 'StaticPagesController@about')->name('about');
 Route::any('/signup', 'UsersController@create')->name('signup');
 
 //使用resource定义user路由
-Route::resource('users', 'UsersController');
+Route::resource('/users', 'UsersController');
 
 

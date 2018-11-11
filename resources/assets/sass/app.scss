@@ -145,7 +145,8 @@ aside {
     border-radius: 50%;
   }
 
-  //forms   ————    表格样式
+  //sign_up
+    //表格样式
 input, textarea, select, .uneditable-input {
     border: 1px solid #bbb;
     margin-bottom: 15px;
@@ -157,4 +158,14 @@ input {
 
 .panel {
     margin-top: 50px;
+}
+
+//错误提示
+.alert-danger ul{
+    float: none;
+    list-style: circle;
+
+    li {
+        float: none;
+    }
 }

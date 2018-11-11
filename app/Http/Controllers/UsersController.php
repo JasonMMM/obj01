@@ -27,7 +27,18 @@ class UsersController extends Controller
         $this->validate($request, [
             'name'      =>  'required|max:50',
             'email'     =>  'required|unique:users|email|max:255',
-            'password'  =>  'required|max:4|confirmed'
+            'password'  =>  'required|min:4|confirmed'
         ]);
+
+        //获取提交的表单数据，并存入数据库中，并使用session作为缓存，跳转后提示用户登录成功
+        $user  = User::create([
+            'name'      =>  $request->name,
+            'email'     =>  $request->email,
+            'password'  =>  bcrypt($request->password),
+        ]);
+        //使用session方法，来访问laravel封装好的会话实例。
+        //当我们想存入一条缓存数据，让它只在下一次的请求内有效时，可以使用flash()方法。第一个参数是会话的键，第二个值是会话的值
+        session()->flash("success", "Hello，" . $user->name . '，欢迎来到你的世界。');
+        return redirect()->route('users.show', [$user]);
     }
 }
