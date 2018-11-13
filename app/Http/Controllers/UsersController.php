@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
@@ -22,6 +23,12 @@ class UsersController extends Controller
         return view('users.show', compact('user'));
     }
 
+    /**
+     * 新用户注册
+     *
+     * @param Request $request
+     * @return void
+     */
     public function store(Request $request)
     {
         $this->validate($request, [
@@ -36,6 +43,9 @@ class UsersController extends Controller
             'email'     =>  $request->email,
             'password'  =>  bcrypt($request->password),
         ]);
+
+        //用户注册成功后，自动登录
+        Auth::login($user);
         //使用session方法，来访问laravel封装好的会话实例。
         //当我们想存入一条缓存数据，让它只在下一次的请求内有效时，可以使用flash()方法。第一个参数是会话的键，第二个值是会话的值
         session()->flash("success", "Hello，" . $user->name . "，欢迎来到你的世界。");

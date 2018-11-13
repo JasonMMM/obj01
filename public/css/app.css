@@ -8415,6 +8415,14 @@ p {
   color: #CDDC39;
 }
 
+#logout {
+  cursor: default;
+}
+
+#logout:hover {
+  background-color: transparent;
+}
+
 footer {
   margin-top: 45px;
   padding-top: 5px;
