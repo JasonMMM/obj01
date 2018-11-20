@@ -43,7 +43,10 @@ class UsersController extends Controller
             'email'     =>  $request->email,
             'password'  =>  bcrypt($request->password),
         ]);
-
+        if(!$user){
+            session()->flash('danger','用户创建失败，请重试');
+            return redirect()->route('user.create');
+        }
         //用户注册成功后，自动登录
         Auth::login($user);
         //使用session方法，来访问laravel封装好的会话实例。
