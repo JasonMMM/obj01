@@ -8528,3 +8528,40 @@ input {
   float: none;
 }
 
+.gravatar_edit {
+  margin: 15px auto;
+  text-align: center;
+}
+
+.gravatar_edit .gravatar {
+  float: none;
+  max-width: 100px;
+}
+
+.users {
+  list-style: none;
+  margin: 0;
+  width: 100%;
+  padding-left: 0;
+  float: left;
+}
+
+.users li {
+  overflow: auto;
+  float: none;
+  padding: 10px 0 10px 10px;
+  margin-bottom: 4px;
+  border: 1px solid #e4e4e4;
+}
+
+.users li a {
+  font-size: 16px;
+  color: cornflowerblue;
+}
+
+.delete-btn {
+  float: right;
+  position: relative;
+  right: 0;
+}
+

@@ -7,6 +7,15 @@ use Illuminate\Support\Facades\Auth;
 
 class SessionController extends Controller
 {
+
+    public function __construct()
+    {
+        //只允许未登录用户访问的页面
+        $this->middleware('guest', [
+            'only'  =>  ['create']
+        ]);
+    }
+
     /**
      * 登录页面
      *
@@ -18,7 +27,7 @@ class SessionController extends Controller
     }
 
     /**
-     * 用户登录页面
+     * 用户登录信息校验
      *
      * @param Request $request
      * @return void
@@ -41,7 +50,7 @@ class SessionController extends Controller
         //匹配数据库
         if(Auth::attempt($credentials, $request->has('remember'))){
             session()->flash("success", "Hello，" . Auth::user()->name . "，欢迎来到你的世界。");
-            return redirect()->route('users.show', [Auth::user()]);
+            return redirect()->intended(route('users.show', [Auth::user()]));
         }else{
             session()->flash('danger', '少侠，通关文牒信息有误，请重新来过~');
             return redirect()->back();
