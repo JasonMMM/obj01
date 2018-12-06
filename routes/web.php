@@ -33,5 +33,20 @@ Route::group(['middleware'  =>  'check'], function(){
     Route::post('/login', 'SessionController@store')->name('login');
         //用户登出(销毁用户会话)
     Route::delete('/logout', 'SessionController@destroy')->name('logout');
+
+    //邮件发送
+    Route::get('/signup/confirm/{token}', 'UsersController@confirmEmail')->name('confirm_email');
+
+    //密码重置
+    Route::group(['prefix'  =>  'auth', 'namespace' =>  'Auth'], function () {
+        //显示重置密码的路由
+        Route::get('/password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('password.request');
+        //发送重置密码邮件的路由
+        Route::post('/password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+        //从邮箱中跳转至重置密码页面的路由
+        Route::get('/password/reset/{token}/{email}', 'ResetPasswordController@showResetForm')->name('password.reset');
+        //提交密码重置信息
+        Route::post('/pawword/reset', 'ResetPasswordController@reset')->name('password.update');
+    });
 });
 

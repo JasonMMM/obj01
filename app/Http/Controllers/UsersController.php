@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Mail;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +14,7 @@ class UsersController extends Controller
     {
         //只允许已登录用户访问的页面
         $this->middleware('auth', [
-            'except' => ['show', 'create', 'store', 'index'],
+            'except' => ['show', 'create', 'store', 'index', 'confirmEmail'],
         ]);
         //只允许未登录用户访问的页面
         $this->middleware('guest', [
@@ -73,12 +74,38 @@ class UsersController extends Controller
             session()->flash('danger', '用户创建失败，请重试');
             return redirect()->route('user.create');
         }
-        //用户注册成功后，自动登录
-        Auth::login($user);
-        //使用session方法，来访问laravel封装好的会话实例。
-        //当我们想存入一条缓存数据，让它只在下一次的请求内有效时，可以使用flash()方法。第一个参数是会话的键，第二个值是会话的值
-        session()->flash("success", "Hello，" . $user->name . "，欢迎来到你的世界。");
-        return redirect()->route('users.show', [$user]);
+        // //用户注册成功后，自动登录
+        // Auth::login($user);
+        // //使用session方法，来访问laravel封装好的会话实例。
+        // //当我们想存入一条缓存数据，让它只在下一次的请求内有效时，可以使用flash()方法。第一个参数是会话的键，第二个值是会话的值
+        // session()->flash("success", "Hello，" . $user->name . "，欢迎来到你的世界。");
+        // return redirect()->route('users.show', [$user]);
+
+        //当用户注册成功后，主动发送邮件，并跳转到首页
+        //存在问题：如果邮件发送失败怎么办？①网络原因②用户邮箱错误
+        $this->sendEmailConfirmationTo($user);
+        session()->flash('success', '验证邮箱已发送到您的注册邮箱，请注意查收！');
+        return redirect('/');
+    }
+
+    /**
+     * 发送邮件
+     *
+     * @param [type] $user
+     * @return void
+     */
+    public function sendEmailConfirmationTo($user)
+    {
+        $view = 'emails.confirm';
+        $data = compact('user');
+        $from = 'xiefeng1002@gmail.com';
+        $name = 'xiefeng';
+        $to = $user->email;
+        $subject = "感谢注册，请确认邮箱！";
+
+        Mail::send($view, $data, function($message) use ($from, $name, $to, $subject) {
+            $message->from($from, $name)->to($to)->subject($subject);
+        });
     }
 
     /**
@@ -134,5 +161,23 @@ class UsersController extends Controller
         $user->delete();
         session()->flash('success', '删除成功');
         return back();
+    }
+
+    /**
+     * 邮箱注册
+     *
+     * @param [type] $token
+     * @return void
+     */
+    public function confirmEmail($token)
+    {
+        $user = User::where('activation_token', $token)->firstOrFail();
+        
+        $user->activated = true;
+        $user->save();
+        // $user->activation_token = $token;
+        Auth::login($user);
+        session()->flash('success', '恭喜，激活成功');
+        return redirect()->route('users.show', compact('user'));
     }
 }

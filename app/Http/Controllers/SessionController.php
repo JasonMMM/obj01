@@ -40,17 +40,22 @@ class SessionController extends Controller
             'email'     =>  'required|email|max:255',
             'password'  =>  'required'
         ]);
-
-        /**
-         * 
-         * 判断前端表单传递过来的remember是否有值
-         * @method $request->has('remember');
-         * 
-         */
+         // 判断前端表单传递过来的remember是否有值
+         //@method $request->has('remember');
         //匹配数据库
         if(Auth::attempt($credentials, $request->has('remember'))){
-            session()->flash("success", "Hello，" . Auth::user()->name . "，欢迎来到你的世界。");
-            return redirect()->intended(route('users.show', [Auth::user()]));
+            $user = Auth::user();
+            //判断邮箱是否已激活
+            if($user->activated) {
+                session()->flash("success", "Hello，" . $user->name . "，欢迎来到你的世界。");
+                return redirect()->intended(route('users.show', compact('user')));
+            }else{
+                //如果没有激活邮箱，退出当前的登录状态
+                Auth::logout();
+                session()->flash('warning', '账号未激活，请检查邮箱中的注册邮件进行激活。');
+                return redirect('/');
+            }
+            
         }else{
             session()->flash('danger', '少侠，通关文牒信息有误，请重新来过~');
             return redirect()->back();
